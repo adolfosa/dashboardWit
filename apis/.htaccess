@@ -1,0 +1,37 @@
+# Configuración básica
+Options -Indexes
+DirectoryIndex index.php
+
+# Configuración de CORS
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header set Access-Control-Allow-Credentials "true"
+</IfModule>
+
+# Manejar preflight CORS
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Redirecciones para API
+RewriteRule ^apis/auth$ apis/auth.php [L]
+RewriteRule ^apis/users$ apis/users.php [L]
+
+# Manejo de errores
+ErrorDocument 404 /errors/404.json
+ErrorDocument 500 /errors/500.json
+
+# Configuración de caché para archivos JSON
+<FilesMatch "\.(json)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+
+# Seguridad básica
+<FilesMatch "\.(php|ini|log)$">
+    Deny from all
+</FilesMatch>
+<FilesMatch "^(auth|users)\.php$">
+    Allow from all
+</FilesMatch>

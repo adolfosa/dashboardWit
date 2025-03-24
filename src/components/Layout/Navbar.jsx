@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './styles.css';
+import './Layout.css';
 
 const Navbar = ({ userRole }) => {
   return (

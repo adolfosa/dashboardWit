@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-import './styles.css';
+import './Layout.css';
 
 const Sidebar = ({ isOpen, userRole }) => {
   const navigate = useNavigate();

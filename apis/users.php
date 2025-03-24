@@ -3,8 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-$conn = new mysqli("ls-ac361eb6981fc8da3000dad63b382c39e5f1f3cd.cylsiewx0zgx.us-east-1.rds.amazonaws.com",
- "dbmasteruser", "CP7>2fobZp<7Kja!Efy3Q+~g:as2]rJD", "miapp");
+$conn = new mysqli("localhost", "root", "", "miapp");
 
 if ($conn->connect_error) {
     die(json_encode(["error" => "Error de conexión a la base de datos"]));

@@ -1,16 +1,16 @@
+// src/components/Layout/Layout.jsx
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import './styles.css';
+import Navbar from './Navbar';
+import './Layout.css';
 
-const Layout = () => {
+export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userRole = localStorage.getItem('userRole');
 
   return (
     <div className="app-container">
-      {/* Botón del menú hamburguesa */}
       <button 
         className="menu-btn" 
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -18,21 +18,14 @@ const Layout = () => {
         ☰
       </button>
       
-      {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} userRole={userRole} />
       
-      {/* Área principal */}
       <div className="main-content">
-        {/* Navbar superior */}
         <Navbar userRole={userRole} />
-        
-        {/* Contenido de las páginas */}
         <div className="content-container">
-          <Outlet />
+          <Outlet /> {/* Aquí se renderizarán las páginas */}
         </div>
       </div>
     </div>
   );
-};
-
-export default Layout;
+}
