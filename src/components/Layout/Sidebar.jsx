@@ -14,25 +14,29 @@ const Sidebar = ({ isOpen, userRole }) => {
 
   return (
     <div className="sidebar" style={{ left: isOpen ? '0' : '-250px' }}>
-      {/* Menú de admin solo para rol 'admin' */}
-      {userRole === 'admin' && (
-        <div className="admin-menu">
-          <Link to="/configuracion" className="sidebar-link">
-            <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
-            <span>Configuración</span>
-          </Link>
-          <Link to="/users" className="sidebar-link">
-            <FontAwesomeIcon icon={faUsers} className="sidebar-icon" />
-            <span>Usuarios</span>
-          </Link>
-        </div>
-      )}
+      {/* Contenido del menú */}
+      <div className="menu-content">
+        {userRole === 'admin' && (
+          <>
+            <Link to="/configuracion" className="sidebar-link">
+              <FontAwesomeIcon icon={faCog} className="sidebar-icon" />
+              <span>Configuración</span>
+            </Link>
+            <Link to="/users" className="sidebar-link">
+              <FontAwesomeIcon icon={faUsers} className="sidebar-icon" />
+              <span>Usuarios</span>
+            </Link>
+          </>
+        )}
+      </div>
       
-      {/* Botón de logout */}
-      <button className="logout-btn" onClick={handleLogout}>
-        <FontAwesomeIcon icon={faSignOutAlt} className="sidebar-icon" />
-        <span>Cerrar Sesión</span>
-      </button>
+      {/* Contenedor especial para el logout */}
+      <div className="logout-container">
+        <button className="logout-btn" onClick={handleLogout}>
+          <FontAwesomeIcon icon={faSignOutAlt} className="sidebar-icon" />
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
     </div>
   );
 };
