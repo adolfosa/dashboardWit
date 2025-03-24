@@ -1,51 +1,95 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
+$conn = require 'db.php';
 
-$conn = new mysqli("localhost", "root", "", "miapp");
-
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Error de conexión a la base de datos"]));
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
 }
 
-// Obtener todos los usuarios
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    $result = $conn->query("SELECT id, username, role FROM users");
-    echo json_encode($result->fetch_all(MYSQLI_ASSOC));
-}
+try {
+    // Obtener todos los usuarios
+    if ($_SERVER["REQUEST_METHOD"] === "GET") {
+        $result = $conn->query("SELECT id, username, role FROM users");
+        if (!$result) {
+            throw new Exception("Error al obtener usuarios");
+        }
+        echo json_encode($result->fetch_all(MYSQLI_ASSOC));
+        exit;
+    }
 
-// Agregar usuario
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["create"])) {
+    // Verificar que sea POST para las demás operaciones
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception("Método no permitido", 405);
+    }
+
     $data = json_decode(file_get_contents("php://input"));
-    $username = $conn->real_escape_string($data->username);
-    $password = md5($data->password);
-    $role = $conn->real_escape_string($data->role);
+    if (!$data) {
+        throw new Exception("Datos JSON inválidos", 400);
+    }
 
-    $conn->query("INSERT INTO users (username, password, role) VALUES ('$username', '$password', '$role')");
-    echo json_encode(["message" => "Usuario agregado"]);
+    // Agregar usuario
+    if (isset($_GET["create"])) {
+        if (!isset($data->username) || !isset($data->password) || !isset($data->role)) {
+            throw new Exception("Datos incompletos para crear usuario", 400);
+        }
+
+        $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+        $username = trim($data->username);
+        $password = md5(trim($data->password));
+        $role = trim($data->role);
+        
+        $stmt->bind_param("sss", $username, $password, $role);
+        $stmt->execute();
+        
+        echo json_encode(["status" => "success", "message" => "Usuario creado exitosamente"]);
+        exit;
+    }
+
+    // Editar usuario
+    if (isset($_GET["update"])) {
+        if (!isset($data->id) || !isset($data->username) || !isset($data->role)) {
+            throw new Exception("Datos incompletos para actualizar usuario", 400);
+        }
+
+        if (!empty($data->password)) {
+            $stmt = $conn->prepare("UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?");
+            $password = md5(trim($data->password));
+            $stmt->bind_param("sssi", $data->username, $password, $data->role, $data->id);
+        } else {
+            $stmt = $conn->prepare("UPDATE users SET username = ?, role = ? WHERE id = ?");
+            $stmt->bind_param("ssi", $data->username, $data->role, $data->id);
+        }
+        
+        $stmt->execute();
+        echo json_encode(["status" => "success", "message" => "Usuario actualizado exitosamente"]);
+        exit;
+    }
+
+    // Eliminar usuario
+    if (isset($_GET["delete"])) {
+        if (!isset($data->id)) {
+            throw new Exception("ID de usuario requerido", 400);
+        }
+
+        $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->bind_param("i", $data->id);
+        $stmt->execute();
+        
+        echo json_encode(["status" => "success", "message" => "Usuario eliminado exitosamente"]);
+        exit;
+    }
+
+    // Si no coincide con ninguna operación conocida
+    throw new Exception("Operación no válida", 400);
+
+} catch (Exception $e) {
+    http_response_code($e->getCode() ?: 500);
+    echo json_encode([
+        "status" => "error",
+        "message" => $e->getMessage()
+    ]);
+} finally {
+    if (isset($stmt)) $stmt->close();
+    if (isset($conn)) $conn->close();
 }
-
-// Editar usuario
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["update"])) {
-    $data = json_decode(file_get_contents("php://input"));
-    $id = $conn->real_escape_string($data->id);
-    $username = $conn->real_escape_string($data->username);
-    $role = $conn->real_escape_string($data->role);
-    $password = !empty($data->password) ? "password = '".md5($data->password)."'," : "";
-
-    $conn->query("UPDATE users SET username='$username', $password role='$role' WHERE id=$id");
-    echo json_encode(["message" => "Usuario actualizado"]);
-}
-
-// Eliminar usuario
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["delete"])) {
-    $data = json_decode(file_get_contents("php://input"));
-    $id = $conn->real_escape_string($data->id);
-    
-    $conn->query("DELETE FROM users WHERE id=$id");
-    echo json_encode(["message" => "Usuario eliminado"]);
-}
-
-$conn->close();
 ?>

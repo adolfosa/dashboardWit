@@ -15,7 +15,6 @@ try {
         throw new Exception("Error de conexión a la base de datos");
     }
     
-    // Retornamos la conexión para usarla en otros archivos
     return $conn;
     
 } catch (Exception $e) {
