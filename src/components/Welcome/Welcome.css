@@ -1,0 +1,49 @@
+/* src/components/Welcome/Welcome.css */
+.welcome-container {
+    background-color: #222;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+.welcome-logo:hover {
+    filter: drop-shadow(0 0 2em #ffffff);
+  }
+.welcome-logo {
+    height: 120px;
+    margin-bottom: 2rem;
+    will-change: filter;
+  transition: filter 300ms;
+}
+
+.btn-custom {
+    background-color: #444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+    width: fit-content; /* Ajusta el ancho al contenido */
+    min-width: 150px; /* Ancho mínimo reducido */
+    max-width: 200px; /* Ancho máximo opcional */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    display: inline-block; /* Cambiado a inline-block */
+}
+
+.btn-custom:hover {
+    background-color: #666;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.btn-custom:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}

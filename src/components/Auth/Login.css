@@ -14,7 +14,7 @@
 
 /* Efecto hover: sombra en el logo */
 .logo:hover {
-  filter: drop-shadow(0 0 2em #613eff);
+  filter: drop-shadow(0 0 2em #ffffff);
 }
 
 /* Estilos generales para el contenedor de login */
