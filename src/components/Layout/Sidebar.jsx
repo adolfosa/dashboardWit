@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Layout.css';
 
 const Sidebar = ({ isOpen, userRole }) => {
@@ -13,10 +13,7 @@ const Sidebar = ({ isOpen, userRole }) => {
   };
 
   return (
-    <div 
-      className="sidebar" 
-      style={{ left: isOpen ? '0' : '-250px' }}
-    >
+    <div className="sidebar" style={{ left: isOpen ? '0' : '-250px' }}>
       {/* Menú de admin solo para rol 'admin' */}
       {userRole === 'admin' && (
         <div className="admin-menu">

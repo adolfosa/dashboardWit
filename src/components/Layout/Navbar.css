@@ -1,0 +1,41 @@
+.navbar {
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding-left: 60px;
+  }
+  
+  .navbar-brand {
+    margin-left: 60px;
+  }
+  
+  .nav-link {
+    color: #aaa;
+    transition: color 0.3s;
+  }
+  
+  .nav-link:hover {
+    color: #fff;
+  }
+  
+  /* Contenido principal */
+  .content-container {
+    padding: 80px 20px 20px 20px;
+    transition: margin-left 0.3s;
+  }
+  
+  .sidebar-open .content-container {
+    margin-left: 250px;
+  }
+  .logonav:hover {
+    filter: drop-shadow(0 0 1em #ffffff);
+  }
+  .logonav {
+    height: 2em; /* Reducido un poco para mejor proporción */
+    padding: 0; /* Eliminamos el padding del logo */
+    will-change: filter;
+    transition: filter 300ms;
+  }

@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
-import './Layout.css';
+import './Navbar.css';
 
 const Navbar = ({ userRole }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src="/wit.png" alt="Logo" height="40" />
+          
+          <img src="src/assets/wit.png" alt="Logo" className="logonav" height="40" />
         </Link>
         
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
