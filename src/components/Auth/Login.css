@@ -1,0 +1,74 @@
+.logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #010effaa);
+  }
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+  }
+  
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .login-container {
+    background-color: #222;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-box {
+    background: #333;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+  }
+  
+  /* Inputs con fondo blanco */
+  .login-box .form-control {
+    margin-bottom: 15px;
+    background-color: #fff; /* Cambiado a blanco */
+    color: #333; /* Texto oscuro para mejor contraste */
+    border: 1px solid #ddd; /* Borde sutil */
+    transition: all 0.3s;
+  }
+  
+  /* Estilo cuando el input está enfocado */
+  .login-box .form-control:focus {
+    border-color: #646cff;
+    box-shadow: 0 0 0 0.2rem rgba(100, 108, 255, 0.25);
+    outline: none;
+  }
+  
+  /* Placeholder con color más claro */
+  .login-box .form-control::placeholder {
+    color: #999;
+  }
+  
+  .btn-custom {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 100%;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  .btn-custom:hover {
+    background-color: #666;
+    color: white;
+  }
