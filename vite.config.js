@@ -16,5 +16,17 @@ export default defineConfig({
         }
       }
     }
+  },
+  resolve: {
+    alias: {
+      jquery: 'jquery/dist/jquery.slim.js',
+    }
+  },
+  optimizeDeps: {
+    include: [
+      'jquery',
+      'datatables.net',
+      'datatables.net-bs5'
+    ]
   }
 });

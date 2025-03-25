@@ -4,7 +4,7 @@ import Welcome from './components/Welcome/Welcome';
 import Login from './components/Auth/Login';
 import Layout from './components/Layout/Layout';
 import Dashboard from './components/Pages/Dashboard';
-import Users from './components/Pages/Users';
+import Users from './components/Pages/Users/Users';
 import Configuracion from './components/Pages/Configuracion';
 import Contacto from './components/Pages/Contacto';
 import Nosotros from './components/Pages/Nosotros';
