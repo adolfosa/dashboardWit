@@ -171,7 +171,7 @@ const Users = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Administración de Usuarios</h2>
         <Button 
-          variant="success" 
+          className="btn-agregar" 
           onClick={() => {
             setCurrentUser({
               id: null,
@@ -188,7 +188,7 @@ const Users = () => {
 
       {isLoading ? (
         <div className="text-center my-5">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border text-dark" role="status">
             <span className="visually-hidden">Cargando...</span>
           </div>
           <p className="mt-2">Cargando usuarios...</p>
@@ -205,12 +205,12 @@ const Users = () => {
 
       {/* Modal para agregar/editar usuario */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Header closeButton className="modal-header">
           <Modal.Title>
             {currentUser.id ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body">
           <form onSubmit={handleSubmit}>
             <input type="hidden" value={currentUser.id || ''} />
             
@@ -256,14 +256,13 @@ const Users = () => {
             
             <div className="d-flex justify-content-end mt-4">
               <Button 
-                variant="secondary" 
+                className="btn-secondary me-2"
                 onClick={() => setShowModal(false)}
-                className="me-2"
               >
                 Cancelar
               </Button>
               <Button 
-                variant="primary" 
+                className="btn-editar"
                 type="submit"
                 disabled={isLoading}
               >
