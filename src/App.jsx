@@ -7,7 +7,7 @@ import Dashboard from './components/Pages/Dashboard';
 import Users from './components/Pages/Users/Users';
 import Configuracion from './components/Pages/Configuracion';
 import Contacto from './components/Pages/Contacto';
-import Nosotros from './components/Pages/Nosotros';
+import Nosotros from './components/Pages/Nosotros/Nosotros';
 import Menu1 from './components/Pages/Menu1';
 import Menu2 from './components/Pages/Menu2';
 

@@ -1,0 +1,274 @@
+/* Nosotros.css */
+.nosotros-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    position: relative;
+    height: 60vh;
+    background: url('mask-wit.png') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+    max-width: 800px;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-subtitle {
+    font-size: 1.5rem;
+    color: #f5f5f5;
+    margin-bottom: 2rem;
+  }
+  
+  /* Sections */
+  .descripcion-section, 
+  .mision-section, 
+  .objetivo-section {
+    padding: 5rem 0;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    position: relative;
+  }
+  
+  .section-title:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: #e74c3c;
+    margin: 1rem auto;
+  }
+  
+  .section-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  /* Cards */
+  .mision-objetivo-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    background-color: #333;
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-title {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .icon-container {
+    font-size: 2rem;
+    color: #e74c3c;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+    line-height: 1.7;
+    color: #555;
+  }
+  
+  /* Logo Section */
+  .logo-section {
+    padding: 5rem 0;
+    text-align: center;
+  }
+  
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .logo-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .logo-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .particle {
+    position: absolute;
+    background-color: #ced4da;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: float 5s infinite ease-in-out;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-20px) translateX(20px);
+    }
+  }
+
+  /* Estilos para el contenedor del logo */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.logo-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #333 0%, #222 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  padding: 20px; /* Espacio interno para la imagen */
+}
+
+/* Estilos para el contenedor del logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  
+  .logo-circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #333 0%, #222 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    padding: 20px; /* Espacio interno para la imagen */
+  }
+  
+  /* Estilos para la imagen del logo */
+  .logo-image {
+    max-width: 80%; /* Ajusta este valor según necesites */
+    max-height: 80%;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    filter: brightness(0) invert(1); /* Opcional: convierte el logo a blanco */
+    transition: transform 0.3s ease;
+  }
+  
+  /* Efecto hover para la imagen */
+  .logo-circle:hover .logo-image {
+    transform: scale(1.05);
+  }
+  
+  /* Partículas (se mantienen igual) */
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .particle {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float 6s infinite ease-in-out;
+    filter: blur(1px);
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-30px) translateX(15px) scale(1.1);
+      opacity: 0.9;
+    }
+  }

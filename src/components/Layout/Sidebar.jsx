@@ -9,7 +9,7 @@ const Sidebar = ({ isOpen, userRole }) => {
   const handleLogout = () => {
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('userRole');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
