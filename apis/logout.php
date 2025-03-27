@@ -2,7 +2,7 @@
 session_start();
 
 // Configuración CORS esencial
-header("Access-Control-Allow-Origin: http://localhost:5174");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: POST, OPTIONS, GET");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
