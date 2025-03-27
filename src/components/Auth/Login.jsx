@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Login.css';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -16,25 +16,48 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('/api/apis/auth.php', {
-        username,
+      // 1. Primero hacer login para establecer la sesión
+      const authResponse = await axios.post('/api/apis/auth.php', {
+        email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        withCredentials: true // Esto es crucial para mantener la sesión
       });
 
-      if (response.data.status === "success") {
-        localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("userRole", response.data.role);
-        navigate('/dashboard'); // Redirige al dashboard después de login
+      if (authResponse.data.status === "success") {
+        // 2. Ahora obtener los roles y permisos
+        // Usamos el mismo axios instance para mantener las cookies
+        const rolesResponse = await axios.get('/api/apis/get_roles.php', {
+          withCredentials: true // Mantener credenciales
+        });
+
+        if (rolesResponse.data.status === "success") {
+          // Almacenar toda la información necesaria
+          localStorage.setItem("loggedIn", "true");
+          localStorage.setItem("userRole", authResponse.data.rol_id);
+          localStorage.setItem("roleName", authResponse.data.rol);
+          localStorage.setItem("empresa", authResponse.data.empresa);
+          localStorage.setItem("permissions", JSON.stringify(rolesResponse.data.permissions));
+          
+          // Redirigir al dashboard
+          navigate('/dashboard');
+        } else {
+          setError('Error al obtener permisos de usuario');
+        }
       } else {
-        setError(response.data.message || 'Credenciales incorrectas');
+        setError(authResponse.data.message || 'Credenciales incorrectas');
       }
     } catch (err) {
       console.error("Error de autenticación:", err);
-      setError(err.response?.data?.message || 'Error al conectar con el servidor');
+      // Mensaje más descriptivo para error 403
+      if (err.response?.status === 403) {
+        setError('No tienes permiso para acceder a estos recursos');
+      } else {
+        setError(err.response?.data?.message || 'Error al conectar con el servidor');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -56,13 +79,13 @@ export default function Login() {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Usuario</label>
+            <label htmlFor="email">Correo Electrónico</label>
             <input
-              id="username"
-              type="text"
+              id="email"
+              type="email"
               className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
             />

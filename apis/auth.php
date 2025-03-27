@@ -1,7 +1,12 @@
 <?php
+session_start();
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
 $conn = require 'db.php';
 
-// Solo aceptar métodos POST
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
@@ -13,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!isset($data->username) || !isset($data->password)) {
+if (!isset($data->email) || !isset($data->password)) {
     http_response_code(400);
     echo json_encode([
         "status" => "error",
@@ -23,23 +28,40 @@ if (!isset($data->username) || !isset($data->password)) {
 }
 
 try {
-    // Consulta preparada para seguridad
-    $stmt = $conn->prepare("SELECT role FROM users WHERE username = ? AND password = ?");
-    $username = trim($data->username);
-    $password = md5(trim($data->password)); // Asegúrate de usar el mismo hash que al crear usuarios
     
-    $stmt->bind_param("ss", $username, $password);
+    $stmt = $conn->prepare("
+        SELECT users.id, users.rol_id, users.empresa_id, empresas.nombre AS empresa, roles.nombre AS rol
+        FROM users 
+        LEFT JOIN empresas ON users.empresa_id = empresas.id 
+        LEFT JOIN roles ON roles.id = users.rol_id
+        WHERE users.email = ? AND users.password = ?
+    ");
+    
+    $email = trim($data->email);
+    $password = md5(trim($data->password)); 
+    
+    $stmt->bind_param("ss", $email, $password);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
+        
+        
+        $_SESSION["user_id"] = $row["id"];
+        $_SESSION["email"] = $email;
+        $_SESSION["role_id"] = $row["rol_id"];
+        $_SESSION["empresa_id"] = $row["empresa_id"];
+        $_SESSION["empresa"] = $row["empresa"];
+        $_SESSION["rol"] = $row["rol"];
+        
         echo json_encode([
             "status" => "success", 
-            "role" => $row["role"]
+            "rol_id" => $row["rol_id"],
+            "empresa" => $row["empresa"]
         ]);
     } else {
-        throw new Exception("Usuario o contraseña incorrectos", 401);
+        throw new Exception("Correo o contraseña incorrectos", 401);
     }
     
 } catch (Exception $e) {
