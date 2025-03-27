@@ -16,47 +16,38 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      // 1. Primero hacer login para establecer la sesión
-      const authResponse = await axios.post('/api/apis/auth.php', {
+      const response = await axios.post('/api/apis/auth.php', {
         email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
         },
-        withCredentials: true // Esto es crucial para mantener la sesión
+        withCredentials: true // Esto es crucial
       });
 
-      if (authResponse.data.status === "success") {
-        // 2. Ahora obtener los roles y permisos
-        // Usamos el mismo axios instance para mantener las cookies
-        const rolesResponse = await axios.get('/api/apis/get_roles.php', {
-          withCredentials: true // Mantener credenciales
-        });
-
-        if (rolesResponse.data.status === "success") {
-          // Almacenar toda la información necesaria
-          localStorage.setItem("loggedIn", "true");
-          localStorage.setItem("userRole", authResponse.data.rol_id);
-          localStorage.setItem("roleName", authResponse.data.rol);
-          localStorage.setItem("empresa", authResponse.data.empresa);
-          localStorage.setItem("permissions", JSON.stringify(rolesResponse.data.permissions));
-          
-          // Redirigir al dashboard
-          navigate('/dashboard');
-        } else {
-          setError('Error al obtener permisos de usuario');
+      if (response.data.status === "success") {
+        // Almacena toda la información recibida
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("userRole", response.data.rol_id);
+        localStorage.setItem("roleName", response.data.rol);
+        localStorage.setItem("empresa", response.data.empresa);
+        
+        // Almacena los permisos si existen
+        if (response.data.permissions) {
+          localStorage.setItem("permissions", JSON.stringify(response.data.permissions));
         }
+        
+        navigate('/dashboard');
       } else {
-        setError(authResponse.data.message || 'Credenciales incorrectas');
+        setError(response.data.message || 'Credenciales incorrectas');
       }
     } catch (err) {
       console.error("Error de autenticación:", err);
-      // Mensaje más descriptivo para error 403
       if (err.response?.status === 403) {
-        setError('No tienes permiso para acceder a estos recursos');
+        setError('Acceso no autorizado. Por favor, contacte al administrador.');
       } else {
-        setError(err.response?.data?.message || 'Error al conectar con el servidor');
+        setError(err.response?.data?.message || 'Error de conexión con el servidor');
       }
     } finally {
       setIsLoading(false);

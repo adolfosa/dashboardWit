@@ -12,14 +12,24 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Origin': 'http://localhost:5174'
+        },
+        cookieDomainRewrite: {
+          '*': 'localhost'
+        },
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('X-Forwarded-Host', 'localhost:5174');
+            proxyReq.setHeader('X-Forwarded-Proto', 'http');
+          });
         }
       }
     }
   },
   resolve: {
     alias: {
-      jquery: 'jquery/dist/jquery.slim.js',
+      jquery: 'jquery/dist/jquery.slim.js'
     }
   },
   optimizeDeps: {

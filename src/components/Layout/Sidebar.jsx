@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faUsers, faSignOutAlt, faChartBar, faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, Link } from 'react-router-dom';
@@ -35,11 +36,33 @@ const Sidebar = ({ isOpen }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/apis/logout.php');
-      localStorage.clear();
-      navigate('/login');
+      const response = await axios.post('/api/apis/logout.php', {}, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Añadir si usas JWT
+        }
+      });
+  
+      if (response.data.status === "success") {
+        // Limpiar localStorage selectivamente
+        ['loggedIn', 'userRole', 'roleName', 'empresa', 'permissions', 'token'].forEach(item => {
+          localStorage.removeItem(item);
+        });
+  
+        // Redirigir y forzar recarga para limpiar estado
+        window.location.href = '/login';
+      }
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+      if (error.response?.status === 403) {
+        // Forzar limpieza si el servidor rechazó la petición
+        localStorage.clear();
+        window.location.href = '/login';
+      } else {
+        alert('Error al cerrar sesión. Por favor, intente nuevamente.');
+      }
     }
   };
 
