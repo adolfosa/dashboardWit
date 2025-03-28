@@ -17,7 +17,7 @@
     height: 120px;
     margin-bottom: 2rem;
     will-change: filter;
-  transition: filter 300ms;
+    transition: filter 300ms;
 }
 
 .btn-custom {

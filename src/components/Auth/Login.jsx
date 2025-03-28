@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Login.css';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,24 +17,38 @@ export default function Login() {
     
     try {
       const response = await axios.post('/api/apis/auth.php', {
-        username,
+        email,
         password
       }, {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        withCredentials: true // Esto es crucial
       });
 
       if (response.data.status === "success") {
+        // Almacena toda la información recibida
         localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("userRole", response.data.role);
-        navigate('/dashboard'); // Redirige al dashboard después de login
+        localStorage.setItem("userRole", response.data.rol_id);
+        localStorage.setItem("roleName", response.data.rol);
+        localStorage.setItem("empresa", response.data.empresa);
+        
+        // Almacena los permisos si existen
+        if (response.data.permissions) {
+          localStorage.setItem("permissions", JSON.stringify(response.data.permissions));
+        }
+        
+        navigate('/dashboard');
       } else {
         setError(response.data.message || 'Credenciales incorrectas');
       }
     } catch (err) {
       console.error("Error de autenticación:", err);
-      setError(err.response?.data?.message || 'Error al conectar con el servidor');
+      if (err.response?.status === 403) {
+        setError('Acceso no autorizado. Por favor, contacte al administrador.');
+      } else {
+        setError(err.response?.data?.message || 'Error de conexión con el servidor');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -56,13 +70,13 @@ export default function Login() {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Usuario</label>
+            <label htmlFor="email">Correo Electrónico</label>
             <input
-              id="username"
-              type="text"
+              id="email"
+              type="email"
               className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
             />
