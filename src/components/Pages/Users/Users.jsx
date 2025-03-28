@@ -286,9 +286,9 @@ const Users = () => {
                 onChange={(e) => setCurrentUser({...currentUser, role_id: e.target.value})}
                 required
               >
-                <option value="1">Administrador</option>
-                <option value="2">Usuario Normal</option>
-                <option value="3">Usuario Avanzado</option>
+                <option value="1">Usuario Normal</option>
+                <option value="2">Usuario Avanzado</option>
+                <option value="3">Administrador</option>
               </select>
             </div>
             
