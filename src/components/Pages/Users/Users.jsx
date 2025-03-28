@@ -93,9 +93,9 @@ const Users = () => {
           render: (data, type, row) => {
             // Mapeo de roles si es necesario
             const rolesMap = {
-              '1': 'Administrador',
-              '2': 'Usuario Normal',
-              '3': 'Usuario Avanzado'
+              '1': 'Usuario Normal',
+              '2': 'Usuario Avanzado',
+              '3': 'Administrador'
             };
             return rolesMap[row.rol_id] || data;
           }
