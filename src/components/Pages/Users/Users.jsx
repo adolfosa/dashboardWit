@@ -11,7 +11,9 @@ const Users = () => {
     id: null,
     username: '',
     password: '',
-    role: 'user1'
+    role_id: '2',  // Cambiado a role_id para coincidir con tu API
+    email: '',
+    empresa_id: null
   });
   const [isLoading, setIsLoading] = useState(false);
   const tableRef = useRef(null);
@@ -20,10 +22,15 @@ const Users = () => {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/api/apis/users.php');
+      const response = await axios.get('/api/apis/users.php', {
+        withCredentials: true // Crucial para mantener la sesión
+      });
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
+      if (error.response?.status === 401) {
+        window.location.href = '/login';
+      }
     } finally {
       setIsLoading(false);
     }
@@ -50,17 +57,15 @@ const Users = () => {
     if (!tableRef.current) return;
 
     if (dataTableRef.current) {
-      // Actualizar datos existentes
       dataTableRef.current.clear();
       dataTableRef.current.rows.add(users);
       dataTableRef.current.draw();
       return;
     }
 
-    // Inicialización inicial
     dataTableRef.current = $(tableRef.current).DataTable({
       language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        url: 'src/components/Pages/Users/es-ES.json'
       },
       responsive: true,
       destroy: true,
@@ -77,17 +82,28 @@ const Users = () => {
           className: 'text-center'
         },
         { 
-          data: 'role', 
+          data: 'email',  // Nuevo campo email
+          title: 'Email',
+          className: 'text-center'
+        },
+        { 
+          data: 'rol',  // Cambiado para mostrar el nombre del rol
           title: 'Rol',
           className: 'text-center',
-          render: (data) => {
-            const roles = {
-              'admin': 'Administrador',
-              'user1': 'Usuario Normal',
-              'user2': 'Usuario Avanzado'
+          render: (data, type, row) => {
+            // Mapeo de roles si es necesario
+            const rolesMap = {
+              '1': 'Administrador',
+              '2': 'Usuario Normal',
+              '3': 'Usuario Avanzado'
             };
-            return roles[data] || data;
+            return rolesMap[row.rol_id] || data;
           }
+        },
+        { 
+          data: 'empresa',  // Nuevo campo empresa
+          title: 'Empresa',
+          className: 'text-center'
         },
         { 
           data: null,
@@ -109,7 +125,6 @@ const Users = () => {
         }
       ],
       initComplete: function() {
-        // Manejar eventos después de inicializar
         $(tableRef.current).on('click', '.edit-btn', function() {
           const id = $(this).data('id');
           const user = users.find(u => u.id == id);
@@ -129,7 +144,9 @@ const Users = () => {
       id: user.id,
       username: user.username,
       password: '',
-      role: user.role
+      role_id: user.rol_id,  // Cambiado a role_id
+      email: user.email || '',  // Nuevo campo
+      empresa_id: user.empresa_id || null  // Nuevo campo
     });
     setShowModal(true);
   };
@@ -141,11 +158,18 @@ const Users = () => {
         ? '/api/apis/users.php?update' 
         : '/api/apis/users.php?create';
       
-      await axios.post(url, currentUser);
+      const userData = {
+        ...currentUser,
+        role_id: currentUser.role_id,  // Asegurar que se envíe role_id
+        empresa_id: currentUser.empresa_id || null
+      };
+
+      await axios.post(url, userData, {
+        withCredentials: true // Mantener la sesión
+      });
       setShowModal(false);
       await fetchUsers();
       
-      // Mostrar notificación de éxito
       alert(`Usuario ${currentUser.id ? 'actualizado' : 'creado'} correctamente`);
     } catch (error) {
       console.error("Error saving user:", error);
@@ -156,7 +180,9 @@ const Users = () => {
   const deleteUser = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este usuario?")) {
       try {
-        await axios.post('/api/apis/users.php?delete', { id });
+        await axios.post('/api/apis/users.php?delete', { id }, {
+          withCredentials: true
+        });
         await fetchUsers();
         alert('Usuario eliminado correctamente');
       } catch (error) {
@@ -177,7 +203,9 @@ const Users = () => {
               id: null,
               username: '',
               password: '',
-              role: 'user1'
+              role_id: '2',
+              email: '',
+              empresa_id: null
             });
             setShowModal(true);
           }}
@@ -203,7 +231,6 @@ const Users = () => {
         </div>
       )}
 
-      {/* Modal para agregar/editar usuario */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton className="modal-header">
           <Modal.Title>
@@ -227,6 +254,17 @@ const Users = () => {
             </div>
             
             <div className="mb-3">
+              <label className="form-label">Email</label>
+              <input 
+                type="email" 
+                className="form-control"
+                value={currentUser.email}
+                onChange={(e) => setCurrentUser({...currentUser, email: e.target.value})}
+                required
+              />
+            </div>
+            
+            <div className="mb-3">
               <label className="form-label">
                 {currentUser.id ? 'Nueva Contraseña (dejar vacío para no cambiar)' : 'Contraseña'}
               </label>
@@ -244,14 +282,25 @@ const Users = () => {
               <label className="form-label">Tipo de Usuario</label>
               <select 
                 className="form-select"
-                value={currentUser.role}
-                onChange={(e) => setCurrentUser({...currentUser, role: e.target.value})}
+                value={currentUser.role_id}
+                onChange={(e) => setCurrentUser({...currentUser, role_id: e.target.value})}
                 required
               >
-                <option value="admin">Administrador</option>
-                <option value="user1">Usuario Normal</option>
-                <option value="user2">Usuario Avanzado</option>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario Normal</option>
+                <option value="3">Usuario Avanzado</option>
               </select>
+            </div>
+            
+            <div className="mb-3">
+              <label className="form-label">Empresa ID</label>
+              <input
+                type="number"
+                className="form-control"
+                value={currentUser.empresa_id || ''}
+                onChange={(e) => setCurrentUser({...currentUser, empresa_id: e.target.value ? parseInt(e.target.value) : null})}
+                placeholder="ID de empresa"
+              />
             </div>
             
             <div className="d-flex justify-content-end mt-4">
