@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost/dashboardWit-1',
+        target: 'http://localhost/dashboardWit/',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
@@ -36,6 +36,7 @@ export default defineConfig({
     include: [
       'jquery',
       'datatables.net',
+      'datatables.net-responsive',
       'datatables.net-bs5'
     ]
   }
